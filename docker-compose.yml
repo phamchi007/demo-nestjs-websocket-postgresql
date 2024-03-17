@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  demo-db:
+    image: postgres:15.3-alpine3.18
+    restart: always
+    environment:
+      - POSTGRES_DB=demo_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: demo-postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./deploy/create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+    ports:
+      - '3002:5432'
+    networks:
+      - backend-net
+
+  demo-nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-nest-docker-postgres
+    environment:
+      - PORT=${PORT}
+    restart: always
+    ports:
+      - '3001:3001'
+    networks:
+      - backend-net
+    depends_on:
+      - demo-db
+    volumes:
+      - ./src:/app/src
+    
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: demo-nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+    ports:
+      - '3003:80'
+    depends_on:
+      - demo-db
+    networks:
+      - backend-net
+networks:
+  backend-net:
+    driver: bridge

@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+    <script>
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMzgsInR5cGUiOjAsImlhdCI6MTcxMDY1MzAyMiwiZXhwIjoxNzEzMjQ1MDIyfQ.ZCK5DKdCH6nyN4j9aFmq_JByIA0VBXGpTF54vfSa4k4"
+      const socket = io('http://localhost:3001', {
+        transports: ['websocket','xhr-polling'],
+        auth: {
+          token: `Bearer ${token}`
+        }
+      });
+
+      console.log(`Bearer ${token}`)
+      function addMsg (text) {
+        var p = document.createElement('p');
+        p.innerHTML = text;
+        p.className = 'msg-item';
+        document.getElementById('socket-msg').appendChild(p);
+      }
+      socket.on('connect', function () {
+        console.log('Connected');
+        addMsg('Connected');
+      });
+      socket.on('event', function (data) {
+        addMsg(JSON.stringify(data));
+        console.log('event', data);
+      });
+      socket.on('message', function (data) {
+        addMsg(JSON.stringify(data));
+        console.log('message', data);
+      });
+      socket.on('disconnect', function () {
+        addMsg('Disconnected');
+        console.log('Disconnected');
+      });
+    </script>
+  </head>
+
+  <body>
+    <h1>Socket example</h1>
+    <div id="socket-msg"></div>
+  </body>
+</html>
