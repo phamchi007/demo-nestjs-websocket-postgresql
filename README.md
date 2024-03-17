@@ -44,6 +44,9 @@ $ docker compose up -d
 
 # Run to init local envrionment - debug mod
 $ docker compose up
+
+# Run migration
+$ npm run migration:run
 ```
 
 ## Test
