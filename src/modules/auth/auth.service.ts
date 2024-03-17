@@ -19,6 +19,8 @@ export class AuthService {
         secret: jwtConstants.secret,
       });
 
+      // Check user active -> TODO
+
       return payload;
     } catch (err) {
       return false;

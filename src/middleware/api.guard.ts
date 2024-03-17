@@ -20,6 +20,8 @@ export class APIGuard implements CanActivate {
       const payload = await this.authService.jwtVerify(authToken);
 
       if (payload) {
+        // Check user active -> TODO
+
         request.authInfo = payload;
 
         return payload;

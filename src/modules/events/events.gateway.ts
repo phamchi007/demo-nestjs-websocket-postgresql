@@ -124,6 +124,8 @@ export class EventsGateway {
     // Verify token
     const jwtPayload = await this.authService.jwtVerify(authToken);
 
+    // Check user active -> TODO
+
     return jwtPayload;
   }
 }
